@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html data-page-node-id="zTklmQg2bcKOe2SN6rBv8d" lang="zh-CN">
+<head data-page-node-id="Cl9JLD7AGTGwGJIduQsBKn">
+<script data-page-node-id="mZz43UweG3IKZjlM2CL86D" src="/page/page_comm/inject.js"></script>
+<meta data-page-node-id="esoRF8JiMJCOScaLeFO2GR" charset="UTF-8">
+<meta data-page-node-id="WMuj4BiQj89hj2tGYIF75F" content="width=device-width, initial-scale=1.0" name="viewport">
+<meta data-page-node-id="kXwG58OsYzVo5e5X0b8sUU" content="light dark" name="color-scheme">
+<title data-page-node-id="yBwvQwyLqmupWuinLczK7k" data-pnid-children="yQE94i7ApJCViK1rPQhuxN">茉莉花猪の番茄钟</title>
+<link data-page-node-id="ZgSZqB3Ja1kmc7fdiIt1bc" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍅</text></svg>" rel="icon">
+<style data-page-node-id="DIElhj7HZk4aLGVU7nuGGX" data-pnid-children="gOi6ePFNfVgIFgWI9rGK7Q">
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f6f4f0;--card:#ffffff;--text:#2b2a28;--muted:#98938c;
+  --border:#ece7e0;--accent:#e8563f;--glow:rgba(232,86,63,.32);
+  --shadow:0 12px 32px rgba(30,20,10,.07);
+}
+body[data-mode="short"]{--accent:#2eae7d;--glow:rgba(46,174,125,.32)}
+body[data-mode="long"]{--accent:#3d8bd9;--glow:rgba(61,139,217,.32)}
+body[data-theme="dark"]{
+  --bg:#14161a;--card:#1e2127;--text:#e9e6e1;--muted:#8f959e;
+  --border:#2b2f37;--shadow:0 12px 32px rgba(0,0,0,.35);
+}
+body[data-theme="dark"][data-mode="focus"]{--accent:#ff6a54;--glow:rgba(255,106,84,.28)}
+body[data-theme="dark"][data-mode="short"]{--accent:#3cc78f;--glow:rgba(60,199,143,.25)}
+body[data-theme="dark"][data-mode="long"]{--accent:#5aa5ef;--glow:rgba(90,165,239,.25)}
+html,body{height:100%}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--text);
+  display:flex;justify-content:center;
+  transition:background .3s,color .3s;
+  -webkit-font-smoothing:antialiased;
+}
+.app{width:100%;max-width:460px;padding:22px 18px 34px}
+header.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.logo{font-size:18px;font-weight:700;letter-spacing:.5px}
+.top-actions{display:flex;gap:8px}
+.icon-btn{width:38px;height:38px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:16px;cursor:pointer;display:grid;place-items:center;transition:transform .15s,box-shadow .15s}
+.icon-btn:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--border);border-radius:999px;padding:4px;margin-bottom:16px}
+.tab{flex:1;border:0;background:transparent;color:var(--muted);padding:9px 0;border-radius:999px;font-size:14px;cursor:pointer;transition:all .2s;font-family:inherit}
+.tab.active{background:var(--accent);color:#fff;font-weight:600;box-shadow:0 4px 14px var(--glow)}
+.card,.timer-card{background:var(--card);border:1px solid var(--border);border-radius:24px;box-shadow:var(--shadow)}
+.timer-card{padding:34px 24px 26px;display:flex;flex-direction:column;align-items:center}
+.ring-wrap{position:relative;width:280px;height:280px;max-width:78vw;aspect-ratio:1}
+.ring{width:100%;height:100%;display:block}
+.ring-bg{fill:none;stroke:var(--border);stroke-width:12}
+.ring-fg{fill:none;stroke:var(--accent);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset .25s linear,stroke .3s}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px}
+.time{font-size:60px;font-weight:700;letter-spacing:1px;font-variant-numeric:tabular-nums;line-height:1}
+.status{font-size:13px;color:var(--muted)}
+.dots{display:flex;gap:7px;margin-top:22px}
+.dot{width:9px;height:9px;border-radius:50%;border:1.5px solid var(--accent);opacity:.45}
+.dot.on{background:var(--accent);opacity:1}
+.cycle-info{margin-top:10px;font-size:12.5px;color:var(--muted)}
+.controls{display:flex;gap:10px;margin-top:22px;align-items:center}
+.btn{font-family:inherit;border:0;cursor:pointer;border-radius:999px;transition:transform .15s,box-shadow .15s,background .2s,color .2s;font-weight:600}
+.btn-primary{background:var(--accent);color:#fff;padding:13px 42px;font-size:16px;box-shadow:0 8px 22px var(--glow)}
+.btn-primary:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);padding:12px 22px;font-size:14px}
+.btn-ghost:hover{color:var(--text);border-color:var(--accent)}
+.btn-sm{padding:9px 18px;font-size:13.5px;box-shadow:none}
+.tasks{margin-top:16px;padding:20px}
+.tasks-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px}
+.tasks-head h2{font-size:15px}
+.hint{font-size:11.5px;color:var(--muted)}
+.task-add{display:flex;gap:8px;margin-bottom:8px}
+.task-add input{flex:1;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:12px;padding:10px 14px;font-size:14px;font-family:inherit;outline:none;transition:border-color .2s;min-width:0}
+.task-add input:focus{border-color:var(--accent)}
+.task-list{list-style:none}
+.task{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid var(--border)}
+.task:last-child{border-bottom:0}
+.task input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex:none}
+.task-title{flex:1;font-size:14px;cursor:pointer;word-break:break-all}
+.task.active .task-title{color:var(--accent);font-weight:600}
+.task.done .task-title{text-decoration:line-through;color:var(--muted)}
+.pomos{font-size:12px;color:var(--muted);white-space:nowrap}
+.del{border:0;background:transparent;color:var(--muted);font-size:16px;cursor:pointer;opacity:0;transition:opacity .15s,color .15s;padding:2px 6px;border-radius:6px}
+.task:hover .del{opacity:1}
+.del:hover{color:#e8563f}
+.empty{color:var(--muted);font-size:13px;text-align:center;padding:14px 0}
+.stats{display:flex;justify-content:space-between;margin-top:16px;font-size:12.5px;color:var(--muted);padding:0 4px;gap:8px;flex-wrap:wrap}
+.stats b{color:var(--text);font-weight:600}
+.keys{text-align:center;color:var(--muted);font-size:11.5px;margin-top:10px;opacity:.8}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;place-items:center;padding:20px;z-index:10}
+.modal.open{display:grid}
+.modal-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;width:min(400px,100%);max-height:86vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.modal-card h2{font-size:16px;margin-bottom:10px}
+.field{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);font-size:14px;gap:12px}
+.field input[type=number]{width:76px;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:10px;padding:8px 10px;font-size:14px;font-family:inherit;text-align:center;outline:none}
+.field input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);cursor:pointer}
+.modal-actions{display:flex;gap:8px;margin-top:16px;align-items:center}
+.grow{flex:1}
+/* ---------- 自定义背景 ---------- */
+#bgLayer,#bgOverlay{position:fixed;inset:0;pointer-events:none;z-index:0}
+#bgLayer{display:none;background-size:cover;background-position:center;background-repeat:no-repeat;transition:opacity .4s}
+#bgOverlay{display:none;background:rgba(246,244,240,.62)}
+body[data-bg="image"] #bgOverlay{display:block}
+body[data-theme="dark"] #bgOverlay{background:rgba(20,22,26,.66)}
+body[data-bg="image"] .timer-card{background:transparent;border-color:transparent;box-shadow:none}
+.app{position:relative;z-index:1}
+/* ---------- 名言轮播 ---------- */
+.quote-bar{display:none;margin-top:14px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow);text-align:center}
+.quote-text{display:block;font-size:14px;line-height:1.6}
+.quote-author{display:block;margin-top:4px;font-size:12px;color:var(--muted)}
+/* ---------- 设置新区块 ---------- */
+.settings-sec{margin-top:18px}
+.settings-sec h3{font-size:14px;margin-bottom:10px}
+.preset-row{display:flex;gap:8px;flex-wrap:wrap}
+.preset{width:52px;height:36px;border-radius:10px;border:2px solid var(--border);padding:0;cursor:pointer;background-size:cover;transition:transform .15s,box-shadow .15s}
+.preset:hover{transform:translateY(-1px)}
+.preset.sel{border-color:var(--accent);box-shadow:0 0 0 2px var(--glow)}
+.bg-row{display:flex;gap:8px;margin-top:10px;align-items:center}
+.bg-row input{flex:1;min-width:0;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none}
+.quote-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.quote-item .qt{flex:1;word-break:break-all}
+.quote-item .qa{color:var(--muted);font-size:12px;white-space:nowrap}
+.quote-item .del{opacity:.55}
+.quote-item .del:hover{opacity:1;color:#e8563f}
+.quote-add{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.quote-add input{border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:10px;padding:8px 12px;font-size:13px;font-family:inherit;outline:none}
+.quote-add .q-text{flex:1;min-width:140px}
+.quote-add .q-author{width:90px}
+.empty-tip{color:var(--muted);font-size:12.5px;padding:8px 0}
+</style>
+</head>
+<body data-page-node-id="ax5XqaZZfvmxnH84CLtTsS" data-mode="focus">
+<div data-page-node-id="cfEutpwdd0tcw0myrFDeJc" id="bgLayer"></div>
+<div data-page-node-id="jvTH8POYDuLzWaUTNe9vkG" id="bgOverlay"></div>
+<div data-page-node-id="ufg00M7gwSQQCacKBfVt9a" class="app">
+  <header data-page-node-id="ZzQRNOUrDw6SnOllAX9WNa" class="top">
+    <div data-page-node-id="DSjes4lKzqTMIuSKGCutBA" class="logo"><!--pnid:mKt0GiUlS3N3wBBHf9GjXt-->🍅 茉莉花猪の番茄钟</div>
+    <div data-page-node-id="sVYt1AmoaCc1dARU6xEWM5" class="top-actions">
+      <button data-page-node-id="xcoxb9zCsEjGXVAzU16MFt" class="icon-btn" id="themeBtn" title="切换深色/浅色" type="button"><!--pnid:sbTp94ECfMgCoiN8L8buh9-->🌙</button>
+      <button data-page-node-id="LYSWJzcKknUtS2bnjIoJuL" class="icon-btn" id="settingsBtn" title="设置" type="button"><!--pnid:yHMqb8CLqhLJwZD4gCxbN4-->⚙️</button>
+    </div>
+  </header>
+
+  <nav data-page-node-id="Q20TdQiCyek08vtg8f77Aq" class="tabs">
+    <button data-page-node-id="U8AIoPkOtACURZ2ej7VzS9" class="tab active" data-mode="focus" type="button"><!--pnid:ndbdrol9YhNS1Fgi2JNqOR-->专注</button>
+    <button data-page-node-id="4zBa5ukiDn3M6ccZTXanZX" class="tab" data-mode="short" type="button"><!--pnid:YCtf1tutg7W5wlaI0LhgJU-->短休息</button>
+    <button data-page-node-id="ST9T1EkQm77SZRUKveyOXG" class="tab" data-mode="long" type="button"><!--pnid:T0fG3RgQxpG58Exxpb1ijs-->长休息</button>
+  </nav>
+
+  <section data-page-node-id="jF53cqXp88YF09pELV3ekt" class="timer-card">
+    <div data-page-node-id="O2gDNKc6LqfMRgEpu4KbJ1" class="ring-wrap">
+      <svg data-page-node-id="CmQc8KunyjEKqa3DQ8hZH3" aria-hidden="true" class="ring" viewBox="0 0 280 280">
+        <circle data-page-node-id="T5kF8Xc9n2YWUHoBI4QqT5" class="ring-bg" cx="140" cy="140" r="126"></circle>
+        <circle data-page-node-id="bLPMvqYQP7v6697jexJ7Uj" class="ring-fg" cx="140" cy="140" id="ring" r="126" transform="rotate(-90 140 140)"></circle>
+      </svg>
+      <div data-page-node-id="u0qGb5DJ15QheYUEk0XEra" class="ring-center">
+        <div data-page-node-id="emNki2J1aj52Xkmsn6r35A" class="time" id="time"><!--pnid:OsIqk3KrunFd1hhiMiOE4Y-->25:00</div>
+        <div data-page-node-id="RRwSJmRrcTDaf6OxQQ2olF" class="status" id="status"><!--pnid:rgcaHnbOM5iCSj7D0lJeYc-->准备开始</div>
+      </div>
+    </div>
+    <div data-page-node-id="B0x7FGm1CPJYxvlp4NegF2" class="dots" id="dots"></div>
+    <p data-page-node-id="ePgQqSWn9esKVf3ZqDhPKT" class="cycle-info" id="cycleInfo"></p>
+    <div data-page-node-id="tpLNeOWeEENGbk0quSQMDA" class="controls">
+      <button data-page-node-id="l1DfrnFUsd3Mkxqf26LdAJ" class="btn btn-primary" id="startBtn" type="button"><!--pnid:y5QnCxcs4JxqVaeGEwSn4s-->开始</button>
+      <button data-page-node-id="hKTCHio5Mj4KMWzwcijSmB" class="btn btn-ghost" id="resetBtn" type="button"><!--pnid:ictYCuKJcPU7LTrp4NSEmC-->重置</button>
+      <button data-page-node-id="Xms9qYqySRn7zhBn3b68sY" class="btn btn-ghost" id="skipBtn" type="button"><!--pnid:r9ENbPq0KBaUfd1eIVmjYU-->跳过</button>
+    </div>
+  </section>
+
+  <div data-page-node-id="ZzfeNNg38Us93o8YgBxmCi" class="quote-bar" id="quoteBar">
+    <span data-page-node-id="x1jieCk40h4nawqkT1Pxy1" class="quote-text" id="quoteText"></span>
+    <span data-page-node-id="GDphDViIS26GN7nVYhfCEG" class="quote-author" id="quoteAuthor"></span>
+  </div>
+
+  <section data-page-node-id="u1OUcKp29pFhbD2L6AaZBF" class="card tasks">
+    <div data-page-node-id="sWSVoUf9TJRoi5D2fMst08" class="tasks-head">
+      <h2 data-page-node-id="FUO0Hglaujdg1JB8vf1qaw"><!--pnid:ce8dhCopC6IWc9bDSCdik8-->任务清单</h2>
+      <span data-page-node-id="j7Ljt7gp1UMOhR6E0lKxOT" class="hint"><!--pnid:l3z9POUfbPRhj0NkKA7dDf-->点击任务可设为当前专注对象</span>
+    </div>
+    <div data-page-node-id="HzUuEOUUqirOtF8CLyI7Bp" class="task-add">
+      <input data-page-node-id="WzSiJqnnxfaiOJfaThPcyr" id="taskInput" maxlength="60" placeholder="添加一个任务，回车确认…" type="text">
+      <button data-page-node-id="TFbYt7vNUPD6CwyCYf9wbO" class="btn btn-primary btn-sm" id="addBtn" type="button"><!--pnid:7ICy5eOSlZ7y98uk32ORyD-->添加</button>
+    </div>
+    <ul data-page-node-id="ZVM9YadwE03rOk1XU9zi76" class="task-list" id="taskList"></ul>
+  </section>
+
+  <footer data-page-node-id="kZbqkE3UU1mEpu70UwX0Wg" class="stats">
+    <div data-page-node-id="u6IQ5yhT1RIUvjtzIokvVv"><!--pnid:QRQMtwSdXNtkkhNZ1LaeOV-->今日完成 <b data-page-node-id="AhXGpSMkeU4d8uVbEeUrBF" id="statToday"><!--pnid:rPSqRHYsm0invdvKZaB4S8-->0</b><!--pnid:AY66QzDJlQhyD9YwT72aZG--> 个 · 专注 <b data-page-node-id="GCZnWhlDuLVEDHLiLxjq4u" id="statTodayMin"><!--pnid:smG598RgjRbjiJbKTrlMNl-->0</b><!--pnid:9DJuP5oVvbRi4vEWSqTvfB--> 分钟</div>
+    <div data-page-node-id="MEEq7n23FoyXCg0ilacOja"><!--pnid:ZP03DuKHHyH0zeB2BHFhp7-->累计 <b data-page-node-id="cwVATTfePd4YS3n5oXwLVC" id="statTotal"><!--pnid:1ykZBigGM3x3lb5TkULBeO-->0</b><!--pnid:IMOvuYdEhsIb0K9IyjEtcW--> 个番茄</div>
+  </footer>
+  <p data-page-node-id="Tc3F6DPvZ2jXz0dCj04tXG" class="keys"><!--pnid:ibQNoepA2nYIrlyKgmut7l-->空格 开始/暂停 · R 重置 · 1/2/3 切换模式</p>
+</div>
+
+<div data-page-node-id="11Pej7x9m5CIXRtu5QBL8T" class="modal" id="modal">
+  <div data-page-node-id="fzkgBLCZekwPkkG2f6a8f2" class="modal-card">
+    <h2 data-page-node-id="pf8xxDmFw0gEZdBt6Zl0cV"><!--pnid:xQWjzmVNEV8gkLEGbhXEwp-->设置</h2>
+    <div data-page-node-id="Fj0nVBKzSY9gvvfKMqzBV7" class="field"><label data-page-node-id="JQsZMeRBOzsTAkFfHRLYP8" for="sFocus"><!--pnid:SJ8e1prThzc4Fzdp7WGf4f-->专注时长（分钟）</label><input data-page-node-id="SO7dEtwKYhfBjPmwjvtBBf" id="sFocus" max="180" min="1" type="number"></div>
+    <div data-page-node-id="eTdoz21J7TiOTm7u8zLz45" class="field"><label data-page-node-id="XWPDKVwGmuDnBL0n4a5qX2" for="sShort"><!--pnid:BrqeQMlfYavb90ILHEPt0e-->短休息（分钟）</label><input data-page-node-id="qodw2JFRJUFXtsfrO15Lb3" id="sShort" max="60" min="1" type="number"></div>
+    <div data-page-node-id="cajsPkKPtiAerlICzphHwB" class="field"><label data-page-node-id="wv4kYDrCz0W4NK45PEji4D" for="sLong"><!--pnid:cHs0He1W1tys8IXxAjczVg-->长休息（分钟）</label><input data-page-node-id="ZCbElDiNBZwBht72GNcTvv" id="sLong" max="60" min="1" type="number"></div>
+    <div data-page-node-id="bVnqwexhN34v3hlvMXavuN" class="field"><label data-page-node-id="TPPsK9AfxCzUwFNN7BOA9r" for="sCycles"><!--pnid:rrSVWtGOIXY9PvPOWDnD6Y-->几个番茄后长休息</label><input data-page-node-id="ovw8CyOoWH0YKNua0zEXq4" id="sCycles" max="8" min="2" type="number"></div>
+    <div data-page-node-id="sYapzof9h4OOGP0c43tV48" class="field"><label data-page-node-id="4L2XXBoE9GsIASZfgzZqQs" for="sAuto"><!--pnid:FdJZPog5z9L1DsJCLS2j3j-->自动开始下一阶段</label><input data-page-node-id="1ZRrWHT0T8LT2Ufy8Y4VM4" id="sAuto" type="checkbox"></div>
+    <div data-page-node-id="yJOkucIeptyoumLobcT06F" class="field"><label data-page-node-id="H3GVxeO2Adx7yw72WGKVl9" for="sSound"><!--pnid:cwbsulojBsjB8fJbegTW7p-->结束提示音</label><input data-page-node-id="d14iCHns9TQJn0lZnZpxyL" id="sSound" type="checkbox"></div>
+    <div data-page-node-id="a9v6kuCXyVsZ6wUQCaqXAx" class="field"><label data-page-node-id="zFUdaMKTF0QiiEaAN8Daw1" for="sNotify"><!--pnid:01wHgbwM8rqd53epnUd8A4-->桌面通知</label><input data-page-node-id="wpUFMWTtaicZVItD7FFrS9" id="sNotify" type="checkbox"></div>
+    <div data-page-node-id="ak77dWWB624pMS9o6UDP0B" class="settings-sec">
+      <h3 data-page-node-id="8bjIh7HqnauNOmADnAL2HA"><!--pnid:4DQDj5dNCj9s6UQt7QwdDG-->背景图片</h3>
+      <div data-page-node-id="AUe1ss5bMpVD5bzyn46zpP" class="preset-row" id="presetRow"></div>
+      <div data-page-node-id="tkVSnE4PrhnUE0faMuR1Dr" class="bg-row">
+        <input data-page-node-id="trHN7m2t1FvohUX0Cbm0Zx" id="bgUrlInput" maxlength="500" placeholder="粘贴图片链接，回车应用…" type="url">
+        <button data-page-node-id="TXk8gSfLpFYcEK4Pl5OKpI" class="btn btn-ghost btn-sm" id="applyBgUrlBtn" type="button"><!--pnid:Rm0FahqQY5QtMaq5T5Vxev-->应用</button>
+      </div>
+      <div data-page-node-id="LU1CadjlHKdbLB3QqnKbhQ" class="bg-row">
+        <label data-page-node-id="q5IaaHTogcEOn2C2V2eFso" class="btn btn-ghost btn-sm" for="bgFileInput"><!--pnid:hOenl0ucvWlQslMzjdzshc-->上传本地图片</label>
+        <input data-page-node-id="DFr6EKgBdTd88oi2DZtgZX" accept="image/*" id="bgFileInput" type="file" style="display:none">
+        <div data-page-node-id="beAKQU1jZdaSn7lnDuf8VR" class="grow"></div>
+        <button data-page-node-id="WHqsUHMClFYnzo4AYva36b" class="btn btn-ghost btn-sm" id="resetBgBtn" type="button"><!--pnid:8ZzzTyTZvDCtDI1QIoCAGU-->恢复默认</button>
+      </div>
+    </div>
+    <div data-page-node-id="wTYB11VxHDZW0KCYPW4jaG" class="settings-sec">
+      <h3 data-page-node-id="Ve0TY9ZJJ2LosIueoyKYf9"><!--pnid:cFmkCpERODkSglZjNJO4GQ-->我的名言</h3>
+      <div data-page-node-id="eKvpb4TF3MaMNyW8gaveO1" class="field"><label data-page-node-id="IU6TU1MdxL6j77D1YMtHCq" for="sShowQuotes"><!--pnid:hMYsRsvjw8degvz53J5pcj-->显示名言轮播</label><input data-page-node-id="i1OlsaqAAWpfLtPSpLm8ym" id="sShowQuotes" type="checkbox"></div>
+      <div data-page-node-id="5VAWJAiFHsIk4UROnfwECL" id="quoteList"></div>
+      <div data-page-node-id="Xq1Czgm2IOPPOjD6s1OCVN" class="quote-add">
+        <input data-page-node-id="0kGIdRndVYEneeyYF2y6ty" class="q-text" id="quoteInput" maxlength="80" placeholder="写下你的名言…" type="text">
+        <input data-page-node-id="DCceH0qFpN8koRUEIQzgRx" class="q-author" id="quoteAuthorInput" maxlength="20" placeholder="署名" type="text">
+        <button data-page-node-id="rPM2gVAc5PHCgo5GTtXlRW" class="btn btn-primary btn-sm" id="addQuoteBtn" type="button"><!--pnid:bhDTpSlWVj5TLqjFCB6ykQ-->添加</button>
+      </div>
+    </div>
+    <div data-page-node-id="ZeLOrsek3fCrCG2Hr2aBKs" class="modal-actions">
+      <button data-page-node-id="9Mjwo3DjpzllYtlQbTsOOB" class="btn btn-ghost btn-sm" id="testSoundBtn" type="button"><!--pnid:Mvl6bbptf7l0VhmQIZQSkm-->试听提示音</button>
+      <div data-page-node-id="seR4jtNbhoM9bTdMfbLwUe" class="grow"></div>
+      <button data-page-node-id="BWYeILXYWqoKZriF4grlMX" class="btn btn-ghost btn-sm" id="closeBtn" type="button"><!--pnid:dA9Z120f7DwIkAmIJEvKLo-->取消</button>
+      <button data-page-node-id="wgUb2AB9N77fo0WMbWuKEe" class="btn btn-primary btn-sm" id="saveBtn" type="button"><!--pnid:gSVdRS7J0FSXiWNNuUREox-->保存</button>
+    </div>
+  </div>
+</div>
+
+<script data-page-node-id="1Sz2gd2DICg8THKeAVAmPc" data-pnid-children="br5EACtrv9TYUlZMGgjIlr">
+(function(){
+"use strict";
+var $ = function(s){ return document.querySelector(s); };
+var $$ = function(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); };
+function pad(n){ return String(n).padStart(2,"0"); }
+function clamp(v,a,b){ return Math.min(b, Math.max(a, v)); }
+function today(){ var d = new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+
+var LS = {
+  get: function(k,d){ try{ var v = JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } },
+  set: function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+
+var DEFAULT_SETTINGS = { focus:25, short:5, long:15, cycles:4, autoStart:false, sound:true, notify:false };
+var settings = Object.assign({}, DEFAULT_SETTINGS, LS.get("pm_settings", {}));
+var tasks = LS.get("pm_tasks", []);
+var stats = LS.get("pm_stats", null) || { date:today(), todayCount:0, todaySec:0, totalCount:0, totalSec:0 };
+if (stats.date !== today()){ stats.date = today(); stats.todayCount = 0; stats.todaySec = 0; LS.set("pm_stats", stats); }
+
+var MODE_LABEL = { focus:"专注", short:"短休息", long:"长休息" };
+var MODE_TIP = { focus:"保持专注，别被干扰", short:"喝口水，活动一下", long:"起来走走，远眺放松" };
+
+var mode = "focus";
+var running = false;
+var endAt = 0;
+var remain = settings.focus * 60000;
+var timer = null;
+var cycleCount = 0;
+var activeTaskId = LS.get("pm_active_task", null);
+
+var timeEl = $("#time"), statusEl = $("#status"), ring = $("#ring"), dotsEl = $("#dots");
+var cycleInfoEl = $("#cycleInfo"), startBtn = $("#startBtn"), themeBtn = $("#themeBtn");
+var taskInput = $("#taskInput"), taskList = $("#taskList"), modal = $("#modal");
+
+var R = 126, CIRC = 2 * Math.PI * R;
+ring.style.strokeDasharray = CIRC;
+ring.style.strokeDashoffset = 0;
+
+function total(){ return settings[mode] * 60000; }
+
+/* ---------- 计时核心 ---------- */
+function start(){
+  if (running) return;
+  if (remain <= 0) remain = total();
+  endAt = Date.now() + remain;
+  running = true;
+  timer = setInterval(tick, 200);
+  render();
+}
+function pause(){
+  if (!running) return;
+  remain = Math.max(0, endAt - Date.now());
+  running = false;
+  clearInterval(timer); timer = null;
+  render();
+}
+function toggle(){ if (running) pause(); else start(); }
+function reset(){ pause(); remain = total(); render(); }
+function tick(){
+  remain = endAt - Date.now();
+  if (remain <= 0){ remain = 0; complete(); return; }
+  render();
+}
+function complete(){
+  running = false;
+  clearInterval(timer); timer = null;
+  remain = 0;
+  render();
+  if (mode === "focus"){
+    cycleCount++;
+    stats.todayCount++; stats.totalCount++;
+    stats.todaySec += settings.focus * 60; stats.totalSec += settings.focus * 60;
+    LS.set("pm_stats", stats);
+    var t = null;
+    for (var i=0;i<tasks.length;i++){ if (tasks[i].id === activeTaskId){ t = tasks[i]; break; } }
+    if (t){ t.pomos++; saveTasks(); renderTasks(); }
+    var toLong = (cycleCount % settings.cycles === 0);
+    notify("茉莉花猪の番茄钟", toLong ? "太棒了！完成本轮最后一个番茄，进入长休息吧" : "完成一个番茄，休息一下吧");
+    if (toLong) switchMode("long", settings.autoStart);
+    else switchMode("short", settings.autoStart);
+  } else {
+    notify("茉莉花猪の番茄钟", "休息结束，开始新的专注吧");
+    if (mode === "long") cycleCount = 0;
+    switchMode("focus", settings.autoStart);
+  }
+  playChime();
+}
+function skip(){
+  var done = cycleCount % settings.cycles;
+  var next = mode === "focus" ? (done + 1 >= settings.cycles ? "long" : "short") : "focus";
+  switchMode(next, false);
+}
+function switchMode(m, autostart){
+  pause();
+  mode = m;
+  remain = total();
+  document.body.dataset.mode = m;
+  $$(".tab").forEach(function(b){ b.classList.toggle("active", b.dataset.mode === m); });
+  renderQuote();
+  if (autostart) start(); else render();
+}
+
+/* ---------- 渲染 ---------- */
+function render(){
+  var secs = Math.max(0, Math.floor(remain / 1000));
+  var t = pad(Math.floor(secs / 60)) + ":" + pad(secs % 60);
+  timeEl.textContent = t;
+  var frac = total() > 0 ? remain / total() : 0;
+  ring.style.strokeDashoffset = CIRC * frac;
+  var status;
+  if (running) status = MODE_TIP[mode];
+  else if (remain <= 0) status = "时间到";
+  else if (remain < total()) status = "已暂停";
+  else status = "准备开始";
+  statusEl.textContent = status;
+  startBtn.textContent = running ? "暂停" : (remain < total() ? "继续" : "开始");
+  document.title = running ? (t + " · " + MODE_LABEL[mode] + " - 茉莉花猪の番茄钟") : "茉莉花猪の番茄钟";
+  renderDots();
+  renderStats();
+}
+function renderDots(){
+  var n = settings.cycles, done = cycleCount % n;
+  dotsEl.innerHTML = "";
+  for (var i=0;i<n;i++){
+    var d = document.createElement("span");
+    d.className = "dot" + (i < done ? " on" : "");
+    dotsEl.appendChild(d);
+  }
+  cycleInfoEl.textContent = "本轮已完成 " + done + " 个 · 再完成 " + (n - done) + " 个进入长休息";
+}
+function renderStats(){
+  $("#statToday").textContent = stats.todayCount;
+  $("#statTodayMin").textContent = Math.round(stats.todaySec / 60);
+  $("#statTotal").textContent = stats.totalCount;
+}
+
+/* ---------- 任务 ---------- */
+function saveTasks(){ LS.set("pm_tasks", tasks); LS.set("pm_active_task", activeTaskId); }
+function renderTasks(){
+  taskList.innerHTML = "";
+  if (!tasks.length){
+    var li = document.createElement("li");
+    li.className = "empty";
+    li.textContent = "还没有任务，添加一个开始吧";
+    taskList.appendChild(li);
+    return;
+  }
+  tasks.forEach(function(t){
+    var li = document.createElement("li");
+    li.className = "task" + (t.done ? " done" : "") + (t.id === activeTaskId ? " active" : "");
+    var cb = document.createElement("input");
+    cb.type = "checkbox"; cb.checked = t.done;
+    cb.onchange = function(){ t.done = cb.checked; saveTasks(); renderTasks(); };
+    var title = document.createElement("span");
+    title.className = "task-title";
+    title.textContent = t.title;
+    title.onclick = function(){
+      activeTaskId = (activeTaskId === t.id) ? null : t.id;
+      saveTasks(); renderTasks();
+    };
+    var badge = document.createElement("span");
+    badge.className = "pomos";
+    badge.textContent = "🍅 " + t.pomos;
+    var del = document.createElement("button");
+    del.type = "button"; del.className = "del"; del.textContent = "×"; del.title = "删除";
+    del.onclick = function(){
+      tasks = tasks.filter(function(x){ return x.id !== t.id; });
+      if (activeTaskId === t.id) activeTaskId = null;
+      saveTasks(); renderTasks();
+    };
+    li.appendChild(cb); li.appendChild(title); li.appendChild(badge); li.appendChild(del);
+    taskList.appendChild(li);
+  });
+}
+$("#addBtn").onclick = function(){
+  var v = taskInput.value.trim();
+  if (!v) return;
+  tasks.push({ id: Date.now(), title: v, done:false, pomos:0 });
+  taskInput.value = "";
+  saveTasks(); renderTasks(); taskInput.focus();
+};
+taskInput.addEventListener("keydown", function(e){ if (e.key === "Enter") $("#addBtn").click(); });
+
+/* ---------- 提示音与通知 ---------- */
+var audioCtx = null;
+function playChime(){
+  if (!settings.sound) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    var t0 = audioCtx.currentTime;
+    var notes = [523.25, 659.25, 783.99, 1046.50];
+    notes.forEach(function(f, i){
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = "sine"; o.frequency.value = f;
+      var t = t0 + i * 0.16;
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.28, t + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.85);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t); o.stop(t + 0.9);
+    });
+  }catch(e){}
+}
+function notify(title, body){
+  if (!settings.notify || !("Notification" in window)) return;
+  if (Notification.permission === "granted"){
+    try{ new Notification(title, { body: body }); }catch(e){}
+  } else if (Notification.permission !== "denied"){
+    Notification.requestPermission();
+  }
+}
+
+/* ---------- 主题 ---------- */
+var theme = LS.get("pm_theme", null);
+function applyTheme(){
+  var dark = theme === "dark" || (theme === null && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  document.body.dataset.theme = dark ? "dark" : "light";
+  themeBtn.textContent = dark ? "☀️" : "🌙";
+}
+themeBtn.onclick = function(){
+  theme = (document.body.dataset.theme === "dark") ? "light" : "dark";
+  LS.set("pm_theme", theme);
+  applyTheme();
+};
+
+/* ---------- 自定义背景 ---------- */
+var PRESETS = [
+  { name:"晨曦", css:"linear-gradient(135deg,#ffd7a0,#ff9a8b 55%,#ff6a88)" },
+  { name:"森林", css:"linear-gradient(160deg,#0ba360,#3cba92)" },
+  { name:"星空", css:"linear-gradient(180deg,#141e30,#243b55)" },
+  { name:"薰衣草", css:"linear-gradient(135deg,#a18cd1,#fbc2eb)" },
+  { name:"海盐", css:"linear-gradient(135deg,#43cea2,#185a9d)" },
+  { name:"绿野", css:"url(\"https://workbuddy-space-static.codebuddy.work/image/qKEy41janT363f1V6fk9ee.jpg\") center/cover no-repeat" },
+  { name:"晴空", css:"url(\"https://workbuddy-space-static.codebuddy.work/image/MAV3cSLqoKhGe7DOpTMzkA.jpg\") center/cover no-repeat" }
+];
+var bg = LS.get("pm_bg", null) || { type:"none", value:"" };
+function applyBg(){
+  var layer = $("#bgLayer");
+  if (bg.type === "none" || !bg.value){
+    layer.style.display = "none";
+    document.body.removeAttribute("data-bg");
+    return;
+  }
+  var css = (bg.type === "preset") ? bg.value
+    : ("#000 url(\"" + String(bg.value).replace(/["\\]/g, "\\$&") + "\") center/cover no-repeat");
+  layer.style.background = css;
+  layer.style.display = "block";
+  var isImg = (bg.type === "url" || bg.type === "file" || (bg.type === "preset" && /^url\(/.test(bg.value)));
+  document.body.dataset.bg = isImg ? "image" : "preset";
+}
+function presetIndex(){
+  if (bg.type !== "preset") return -1;
+  for (var i=0;i<PRESETS.length;i++){ if (PRESETS[i].css === bg.value) return i; }
+  return -1;
+}
+function markPresetSel(){
+  var idx = presetIndex();
+  $$("#presetRow .preset").forEach(function(b, i){ b.classList.toggle("sel", i === idx); });
+}
+function renderPresets(){
+  var row = $("#presetRow");
+  PRESETS.forEach(function(p){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "preset"; b.title = p.name;
+    b.style.background = p.css;
+    b.onclick = function(){
+      bg = { type:"preset", value:p.css };
+      LS.set("pm_bg", bg); applyBg(); markPresetSel();
+    };
+    row.appendChild(b);
+  });
+}
+$("#applyBgUrlBtn").onclick = function(){
+  var v = $("#bgUrlInput").value.trim();
+  bg = v ? { type:"url", value:v } : { type:"none", value:"" };
+  LS.set("pm_bg", bg); applyBg(); markPresetSel();
+};
+$("#bgUrlInput").addEventListener("keydown", function(e){ if (e.key === "Enter") $("#applyBgUrlBtn").click(); });
+$("#resetBgBtn").onclick = function(){
+  bg = { type:"none", value:"" };
+  LS.set("pm_bg", bg);
+  $("#bgUrlInput").value = "";
+  applyBg(); markPresetSel();
+};
+$("#bgFileInput").addEventListener("change", function(){
+  var file = this.files && this.files[0];
+  this.value = "";
+  if (!file || file.type.indexOf("image/") !== 0) return;
+  var reader = new FileReader();
+  reader.onload = function(){
+    var src = reader.result;
+    var img = new Image();
+    img.onload = function(){
+      try{
+        var max = 1600, w = img.width, h = img.height;
+        var scale = Math.min(1, max / Math.max(w, h));
+        var c = document.createElement("canvas");
+        c.width = Math.max(1, Math.round(w * scale));
+        c.height = Math.max(1, Math.round(h * scale));
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        src = c.toDataURL("image/jpeg", 0.82);
+      }catch(e){}
+      bg = { type:"file", value:src };
+      LS.set("pm_bg", bg);
+      applyBg(); markPresetSel();
+    };
+    img.onerror = function(){
+      bg = { type:"file", value:src };
+      LS.set("pm_bg", bg);
+      applyBg(); markPresetSel();
+    };
+    img.src = src;
+  };
+  reader.readAsDataURL(file);
+});
+
+/* ---------- 名言 ---------- */
+var DEFAULT_QUOTES = [
+  { text:"专注当下，未来自来。", author:"" },
+  { text:"不积跬步，无以至千里。", author:"荀子" },
+  { text:"完成比完美更重要。", author:"" },
+  { text:"时间是最公平的裁判。", author:"" },
+  { text:"心之所向，身之所往。", author:"" }
+];
+var quotes = LS.get("pm_quotes", []);
+var showQuotes = LS.get("pm_show_quotes", true);
+function allQuotes(){ return quotes.length ? quotes : DEFAULT_QUOTES; }
+var quoteIdx = -1;
+function renderQuote(){
+  var bar = $("#quoteBar");
+  if (!showQuotes || !allQuotes().length){ bar.style.display = "none"; return; }
+  bar.style.display = "block";
+  var list = allQuotes(), i;
+  do { i = Math.floor(Math.random() * list.length); } while (list.length > 1 && i === quoteIdx);
+  quoteIdx = i;
+  $("#quoteText").textContent = list[i].text;
+  $("#quoteAuthor").textContent = list[i].author ? "—— " + list[i].author : "";
+}
+setInterval(renderQuote, 30000);
+function renderQuoteList(){
+  var box = $("#quoteList");
+  box.innerHTML = "";
+  if (!quotes.length){
+    var tip = document.createElement("div");
+    tip.className = "empty-tip";
+    tip.textContent = "还没有自定义名言，将显示内置名言";
+    box.appendChild(tip);
+    return;
+  }
+  quotes.forEach(function(q, idx){
+    var row = document.createElement("div");
+    row.className = "quote-item";
+    var t = document.createElement("span");
+    t.className = "qt"; t.textContent = q.text;
+    var a = document.createElement("span");
+    a.className = "qa"; a.textContent = q.author ? "—— " + q.author : "";
+    var del = document.createElement("button");
+    del.type = "button"; del.className = "del"; del.textContent = "×"; del.title = "删除";
+    del.onclick = function(){
+      quotes.splice(idx, 1);
+      LS.set("pm_quotes", quotes);
+      renderQuoteList(); renderQuote();
+    };
+    row.appendChild(t); row.appendChild(a); row.appendChild(del);
+    box.appendChild(row);
+  });
+}
+$("#addQuoteBtn").onclick = function(){
+  var v = $("#quoteInput").value.trim();
+  if (!v) return;
+  quotes.push({ text:v, author:$("#quoteAuthorInput").value.trim() });
+  LS.set("pm_quotes", quotes);
+  $("#quoteInput").value = ""; $("#quoteAuthorInput").value = "";
+  renderQuoteList(); renderQuote();
+  $("#quoteInput").focus();
+};
+$("#quoteInput").addEventListener("keydown", function(e){ if (e.key === "Enter") $("#addQuoteBtn").click(); });
+$("#quoteAuthorInput").addEventListener("keydown", function(e){ if (e.key === "Enter") $("#addQuoteBtn").click(); });
+
+/* ---------- 设置弹窗 ---------- */
+function openSettings(){
+  $("#sFocus").value = settings.focus;
+  $("#sShort").value = settings.short;
+  $("#sLong").value = settings.long;
+  $("#sCycles").value = settings.cycles;
+  $("#sAuto").checked = settings.autoStart;
+  $("#sSound").checked = settings.sound;
+  $("#sNotify").checked = settings.notify;
+  $("#bgUrlInput").value = bg.type === "url" ? bg.value : "";
+  $("#sShowQuotes").checked = showQuotes;
+  renderQuoteList();
+  markPresetSel();
+  modal.classList.add("open");
+}
+$("#settingsBtn").onclick = openSettings;
+$("#closeBtn").onclick = function(){ modal.classList.remove("open"); };
+modal.addEventListener("click", function(e){ if (e.target === modal) modal.classList.remove("open"); });
+$("#testSoundBtn").onclick = function(){
+  var keep = settings.sound;
+  settings.sound = true;
+  playChime();
+  settings.sound = keep;
+};
+$("#saveBtn").onclick = function(){
+  settings.focus = clamp(parseInt($("#sFocus").value, 10) || DEFAULT_SETTINGS.focus, 1, 180);
+  settings.short = clamp(parseInt($("#sShort").value, 10) || DEFAULT_SETTINGS.short, 1, 60);
+  settings.long = clamp(parseInt($("#sLong").value, 10) || DEFAULT_SETTINGS.long, 1, 60);
+  settings.cycles = clamp(parseInt($("#sCycles").value, 10) || DEFAULT_SETTINGS.cycles, 2, 8);
+  settings.autoStart = $("#sAuto").checked;
+  settings.sound = $("#sSound").checked;
+  settings.notify = $("#sNotify").checked;
+  LS.set("pm_settings", settings);
+  showQuotes = $("#sShowQuotes").checked;
+  LS.set("pm_show_quotes", showQuotes);
+  renderQuote();
+  if (settings.notify && "Notification" in window && Notification.permission === "default"){
+    Notification.requestPermission();
+  }
+  if (!running) remain = total();
+  render();
+  modal.classList.remove("open");
+};
+
+/* ---------- 控制与快捷键 ---------- */
+startBtn.onclick = toggle;
+$("#resetBtn").onclick = reset;
+$("#skipBtn").onclick = skip;
+$$(".tab").forEach(function(b){ b.addEventListener("click", function(){ switchMode(b.dataset.mode, false); }); });
+document.addEventListener("keydown", function(e){
+  var tag = (e.target.tagName || "").toLowerCase();
+  if (tag === "input" || tag === "textarea") return;
+  if (e.code === "Space"){ e.preventDefault(); toggle(); }
+  else if (e.key === "r" || e.key === "R"){ reset(); }
+  else if (e.key === "1"){ switchMode("focus", false); }
+  else if (e.key === "2"){ switchMode("short", false); }
+  else if (e.key === "3"){ switchMode("long", false); }
+});
+
+/* ---------- 初始化 ---------- */
+document.body.dataset.mode = mode;
+applyTheme();
+renderPresets();
+applyBg();
+renderTasks();
+renderQuote();
+render();
+})();
+</script>
+</body>
+</html>
